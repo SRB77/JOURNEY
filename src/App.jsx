@@ -1,12 +1,15 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import { Button } from './components/ui/button'
+import Hero from './components/custom/Hero'
+import Header from './components/custom/Header'
 
 const App = () => {
   return (
     <>
-    <h1>Hello my name is Chandan welcome </h1>
-    <Button> Subscribe </Button>
+    {/* herosection */}
+    {/* <Header/> */}
+    <Hero/>
     </>
   )
 }
