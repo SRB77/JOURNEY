@@ -7,8 +7,6 @@ import Header from './components/custom/Header'
 const App = () => {
   return (
     <>
-    {/* herosection */}
-    {/* <Header/> */}
     <Hero/>
     </>
   )

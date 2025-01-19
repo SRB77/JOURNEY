@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import { Button } from '../ui/button';
+import { Link } from 'react-router-dom';
+import Createtrip from '@/create-trip/Createtrip';
 
 const Hero = () => {
   return (
@@ -17,7 +19,9 @@ const Hero = () => {
           Your personal trip planner and travel curator, creating custom
           itineraries tailored to your interests and budget.
         </p>
-        <Button>Get Started,it&apos;s free</Button>
+        <Link to="/create-trip">
+          <Button>Get Started,it&apos;s free</Button>
+        </Link>
       </div>
     </>
   );
