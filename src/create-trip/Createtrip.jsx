@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import { Input } from "@/components/ui/input";
 import { SelectBudgetOptions, SelectTravelsList } from "@/constants/Option";
@@ -7,6 +7,16 @@ import { Button } from "@/components/ui/button";
 
 const Createtrip = () => {
   const [place, setPlace] = useState();
+  const [formData, setFormData] = useState([]);
+  const handleInputChange = (name, value) => {
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
   return (
     <>
       <div className="sm:px-10 md:px-32 lg:px-56 xl:px-10 px-5 mt-10">
@@ -28,7 +38,7 @@ const Createtrip = () => {
                 value: place,
                 onChange: (v) => {
                   setPlace(v);
-                  console.log(v);
+                  handleInputChange("location", v);
                 },
               }}
             />
@@ -38,7 +48,11 @@ const Createtrip = () => {
           <h2 className="text-xl mt-16 font-medium ">
             How many days are you planning your trip?
           </h2>
-          <Input placeholder={"Ex.3"} type="number" />
+          <Input
+            placeholder={"Ex.3"}
+            type="number"
+            onChange={(e) => handleInputChange("noOfDays", e.target.value)}
+          />
         </div>
         <div>
           <h2 className="text-xl mt-16 font-medium ">What is Your Budget?</h2>
@@ -47,6 +61,7 @@ const Createtrip = () => {
               <div
                 key={index}
                 className="p-4 border rounded-lg hover:shadow-lg"
+                onClick={() => handleInputChange("budget", item.title)}
               >
                 <h2 className="text-4xl">{item.icon}</h2>
                 <h2 className="text-xl font-bold">{item.title}</h2>
@@ -64,6 +79,7 @@ const Createtrip = () => {
               <div
                 key={index}
                 className="p-4 border rounded-lg hover:shadow-lg"
+                onClick={() => handleInputChange("people", item.people)}
               >
                 <h2 className="text-4xl">{item.icon}</h2>
                 <h2 className="text-xl font-bold">{item.title}</h2>
