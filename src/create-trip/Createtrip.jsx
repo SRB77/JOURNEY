@@ -55,12 +55,14 @@ const Createtrip = () => {
           />
         </div>
         <div>
-          <h2 className="text-xl mt-16 font-medium ">What is Your Budget?</h2>
+          <h2 className="text-xl mt-16 font-medium "> What is Your Budget? </h2>
           <div className="grid grid-cols-3 gap-5 mt-5">
             {SelectBudgetOptions.map((item, index) => (
               <div
                 key={index}
-                className="p-4 border rounded-lg hover:shadow-lg"
+                className={`p-4 border rounded-lg hover:shadow-lg      ${
+                  formData?.budget == item.title && "shadow-lg border-black"
+                }`}
                 onClick={() => handleInputChange("budget", item.title)}
               >
                 <h2 className="text-4xl">{item.icon}</h2>
@@ -78,7 +80,9 @@ const Createtrip = () => {
             {SelectTravelsList.map((item, index) => (
               <div
                 key={index}
-                className="p-4 border rounded-lg hover:shadow-lg"
+                className={`p-4 border rounded-lg hover:shadow-lg      ${
+                  formData?.traveler == item.people && "shadow-lg border-black"
+                }`}
                 onClick={() => handleInputChange("people", item.people)}
               >
                 <h2 className="text-4xl">{item.icon}</h2>
