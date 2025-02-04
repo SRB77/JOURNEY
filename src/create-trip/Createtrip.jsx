@@ -4,6 +4,7 @@ import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import { Input } from "@/components/ui/input";
 import { SelectBudgetOptions, SelectTravelsList } from "@/constants/Option";
 import { Button } from "@/components/ui/button";
+import { ToastContainer ,toast} from "react-toastify";
 
 const Createtrip = () => {
   const [place, setPlace] = useState();
@@ -17,8 +18,31 @@ const Createtrip = () => {
   useEffect(() => {
     console.log(formData);
   }, [formData]);
+  const OnGenerateTrip = () => {
+    if (formData?.noOfDays > 5) {
+      toast.error("Maximum allowed trip duration is 5 days! 🗓️", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return;
+    } else if (
+      !formData?.budget ||
+      !formData?.location ||
+      !formData?.traveler
+    ) {
+      toast.error("Please fill all details", {
+        position: "bottom-right",
+        autoClose: 1000,
+      });
+      return 
+    }
+    // Add your trip generation logic here
+    toast.success("Generating your perfect trip! 🌍✈️");
+  };
+
   return (
     <>
+    <ToastContainer/>
       <div className="sm:px-10 md:px-32 lg:px-56 xl:px-10 px-5 mt-10">
         <h2 className="font-bold text-3xl">
           Tell us your travel preferences 🏕️🌴
@@ -83,7 +107,7 @@ const Createtrip = () => {
                 className={`p-4 border rounded-lg hover:shadow-lg      ${
                   formData?.traveler == item.people && "shadow-lg border-black"
                 }`}
-                onClick={() => handleInputChange("people", item.people)}
+                onClick={() => handleInputChange("traveler", item.people)}
               >
                 <h2 className="text-4xl">{item.icon}</h2>
                 <h2 className="text-xl font-bold">{item.title}</h2>
@@ -93,7 +117,7 @@ const Createtrip = () => {
           </div>
         </div>
         <div className="my-20 flex justify-end">
-          <Button> Generate Trip </Button>
+          <Button onClick={OnGenerateTrip}> Generate Trip </Button>
         </div>
       </div>
     </>
