@@ -2,9 +2,14 @@
 import React, { useEffect, useState } from "react";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import { Input } from "@/components/ui/input";
-import { SelectBudgetOptions, SelectTravelsList } from "@/constants/Option";
+import {
+  AI_PROMPT,
+  SelectBudgetOptions,
+  SelectTravelsList,
+} from "@/constants/Option";
 import { Button } from "@/components/ui/button";
-import { ToastContainer ,toast} from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import { chatSession } from "@/service/AImodal";
 
 const Createtrip = () => {
   const [place, setPlace] = useState();
@@ -18,7 +23,7 @@ const Createtrip = () => {
   useEffect(() => {
     console.log(formData);
   }, [formData]);
-  const OnGenerateTrip = () => {
+  const OnGenerateTrip = async () => {
     if (formData?.noOfDays > 5) {
       toast.error("Maximum allowed trip duration is 5 days! 🗓️", {
         position: "top-right",
@@ -34,15 +39,28 @@ const Createtrip = () => {
         position: "bottom-right",
         autoClose: 1000,
       });
-      return 
+      return;
     }
     // Add your trip generation logic here
     toast.success("Generating your perfect trip! 🌍✈️");
-  };
+    const FINAL_PROMPT = AI_PROMPT.replace(
+      "{location}",
+      formData?.location.label
+    )
+      .replace("{totalDays}", formData?.noOfDays)
+      .replace("{traveler}", formData?.traveler)
+      .replace("{budget}", formData?.budget)
+      .replace("{totalDays}", formData?.noOfDays);
 
+    console.log(FINAL_PROMPT);
+
+    const result = await chatSession.sendMessage(FINAL_PROMPT);
+
+    console.log(result.response?.text());
+  };
   return (
     <>
-    <ToastContainer/>
+      <ToastContainer />
       <div className="sm:px-10 md:px-32 lg:px-56 xl:px-10 px-5 mt-10">
         <h2 className="font-bold text-3xl">
           Tell us your travel preferences 🏕️🌴
@@ -123,5 +141,4 @@ const Createtrip = () => {
     </>
   );
 };
-
 export default Createtrip;
