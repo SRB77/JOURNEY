@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import { FcGoogle } from "react-icons/fc";
 import { Input } from "@/components/ui/input";
 import {
   AI_PROMPT,
@@ -10,20 +11,41 @@ import {
 import { Button } from "@/components/ui/button";
 import { ToastContainer, toast } from "react-toastify";
 import { chatSession } from "@/service/AImodal";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { useGoogleLogin } from "@react-oauth/google";
 
 const Createtrip = () => {
   const [place, setPlace] = useState();
   const [formData, setFormData] = useState([]);
+  const [openDialouge, setOpenDialouge] = useState(false);
   const handleInputChange = (name, value) => {
     setFormData({
       ...formData,
       [name]: value,
     });
   };
+
   useEffect(() => {
     console.log(formData);
   }, [formData]);
+  const Login = useGoogleLogin({
+    onSuccess: (codeResp) => console.log(codeResp),
+    onError: (error) => console.log(error),
+  });
   const OnGenerateTrip = async () => {
+    const user = localStorage.getItem("user");
+    if (!user) {
+      setOpenDialouge(true);
+      return;
+    }
+
     if (formData?.noOfDays > 5) {
       toast.error("Maximum allowed trip duration is 5 days! 🗓️", {
         position: "top-right",
@@ -51,11 +73,8 @@ const Createtrip = () => {
       .replace("{traveler}", formData?.traveler)
       .replace("{budget}", formData?.budget)
       .replace("{totalDays}", formData?.noOfDays);
-
     console.log(FINAL_PROMPT);
-
     const result = await chatSession.sendMessage(FINAL_PROMPT);
-
     console.log(result.response?.text());
   };
   return (
@@ -137,6 +156,27 @@ const Createtrip = () => {
         <div className="my-20 flex justify-end">
           <Button onClick={OnGenerateTrip}> Generate Trip </Button>
         </div>
+        <Dialog open={openDialouge}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Are you absolutely sure?</DialogTitle>
+              <DialogDescription>
+                <img src="/logosum.svg" alt="logo" />
+                <h2 className="font-bold text-lg text-black mt-7 ">
+                  Sign In With Google
+                </h2>
+                <p>Sign In to the App with Google Authentication securely </p>
+                <Button
+                  className="w-full mt-5 flex gap-4 items-center"
+                  onClick={Login}
+                >
+                  <FcGoogle className="h-7 w-7" />
+                  Sign In With Google{" "}
+                </Button>
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
       </div>
     </>
   );
